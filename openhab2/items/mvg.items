@@ -1,0 +1,6 @@
+String myStation_output "bkaba [%s]" { channel="exec:command:get_dept:output" }
+String myStation_input "blabla [%s]" { channel="exec:command:get_dept:input" }
+Switch myStation_command "myStation Command A" { channel="exec:command:get_dept:run" }
+Switch myStation_switch "myStation Switch"
+
+String departures

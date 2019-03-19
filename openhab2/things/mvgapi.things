@@ -1,0 +1,2 @@
+//At this stage this thing does not get triggered by the items - bug?
+Thing exec:command:get_dept [ command="python@@/home/pi/python_mvg_api/getDeparturesForStation.py", interval=0, timeout=5000, autorun=true]

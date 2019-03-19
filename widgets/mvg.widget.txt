@@ -1,0 +1,16 @@
+<style>.bg_bus {background-color: #00586a;} .bg_tram {background-color: #d82020;}</style>
+<h4>Departures from YOURSTATION</h4>
+<table class="table table-condensed">
+  <tr>
+    <td class ="text-left">Transport</td>
+    <td class ="text-left">Direction</td>
+    <td class ="text-left">Minutes</td>
+    <td class ="text-left">Departure Time</td>
+ 	</tr>
+  <tr class="text-left" ng-repeat="scene in (itemValue('regina_output') || '').split('[')[1].split(']')[0].split(',') track by $index>
+  	<td ng-class="{'bg_bus': {{scene.split(';')[0].substring(1,4) == 'BUS'}} , 'bg_tram': {{scene.split(';')[0].substring(1,5) == 'TRAM'}}}">{{scene.replace('"','').split(';')[0]}} {{scene.replace('"','').split(';')[1]}}</td>
+    <td class = "text-left">{{scene.replace('"','').split(';')[2]}}</td>
+    <td class ="text-left">{{scene.replace('"','').split(';')[3].replace('"','')}}</td>
+	 <td class ="text-left">{{scene.replace('"','').split(';')[4].replace('"','')}}</td>
+  <tr>
+</table>

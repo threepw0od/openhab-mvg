@@ -1,0 +1,46 @@
+rule "MVG Rule"
+
+when
+        Item myStation_switch changed
+
+then
+        if(myStation_switch.state == ON){
+
+                //START INITIAL CALL--------
+                //when switch is turned on for the first time call the api
+                logInfo("Your command exec", "Result:" + "myStation_switch is ON" )
+
+                myStation_command.postUpdate(ON)
+                
+                logInfo("Your command exec", "Result:" + myStation_command )
+                logInfo("Your command exec", "Result:" + myStation_output.state )
+
+                //val results = executeCommandLine("/bin/echo@@'This is a test.'", 5000)
+                // issue with using the actual thing behind it. More at https://community.openhab.org/t/how-to-solve-exec-binding-problems/18131
+                
+                //call the python script to get the departures as a string with a timeout of 5 seconds
+                val results = executeCommandLine("python@@/home/pi/python_mvg_api/getDeparturesForStation.py", 5000)
+                logInfo("execTest", results)
+                //post departure string to output item
+                myStation_output.postUpdate("'"+results+"'")
+                //END INITIAL CALL--------
+                
+                //send departures to output
+                
+                //After init keep refreshing as long as switch is ON
+                while(myStation_command.state == ON){
+                        logInfo("Your command exec", "Result:" + "Waiting 50 seconds until next MVG departures refresh..." )
+                        Thread::sleep(50000)
+                        logInfo("Your command exec", "Result:" + "Let's refresh the MVG departures again..." )
+                        //call the python script to get the departures as a string with a timeout of 5 seconds
+                        val results = executeCommandLine("python@@/home/pi/python_mvg_api/getDeparturesForStation.py", 5000)
+                        //post departure string to output item
+                        myStation_output.postUpdate("'"+results+"'")
+                        logInfo("Your command exec", "Result:" + "done." )
+                }
+
+        }else{
+                logInfo("Your command exec", "Result:" + "myStation_switch is OFF. Stop refreshing MVG departures." )
+                myStation_command.postUpdate(OFF)
+        }
+end
